@@ -41,7 +41,7 @@
     }
 
     .card {
-      width: 100%; max-width: 680px; /* Un poco más ancho para la tabla */
+      width: 100%; max-width: 680px; 
       background: var(--surface); border: 1px solid var(--border);
       border-radius: var(--radius-lg); overflow: hidden;
       box-shadow: 0 0 50px rgba(0,0,0,0.4);
@@ -51,6 +51,7 @@
 
     /* Variantes de estado */
     .card.success { border-color: rgba(52,211,153,0.3); box-shadow: 0 0 60px rgba(52,211,153,0.1); }
+    .card.warning { border-color: rgba(245,158,11,0.4); box-shadow: 0 0 60px rgba(245,158,11,0.1); }
     .card.timeout { border-color: rgba(239,68,68,0.3); box-shadow: 0 0 60px rgba(239,68,68,0.1); }
 
     .card-body { padding: 3rem 2.5rem; display: flex; flex-direction: column; align-items: center; }
@@ -58,61 +59,45 @@
     .icon-wrap {
       width: 80px; height: 80px; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      font-size: 2.5rem; margin-bottom: 1rem;
+      font-size: 2.5rem; margin-bottom: 1rem; border: 2px solid;
     }
-    .success .icon-wrap { background: rgba(52,211,153,0.1); border: 2px solid rgba(52,211,153,0.4); color: var(--green); }
-    .timeout .icon-wrap { background: rgba(239,68,68,0.1); border: 2px solid rgba(239,68,68,0.4); color: var(--red); }
+    .success .icon-wrap { background: rgba(52,211,153,0.1); border-color: rgba(52,211,153,0.4); color: var(--green); }
+    .warning .icon-wrap { background: rgba(245,158,11,0.1); border-color: rgba(245,158,11,0.4); color: var(--gold); }
+    .timeout .icon-wrap { background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.4); color: var(--red); }
 
     .eyebrow {
       font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
       color: var(--muted); margin-bottom: 0.5rem;
     }
     .success .eyebrow { color: var(--green); }
+    .warning .eyebrow { color: var(--gold); }
     .timeout .eyebrow { color: var(--red); }
 
     .titulo {
       font-family: var(--font-mono); font-size: clamp(1.8rem, 4vw, 2.5rem); line-height: 1.1;
-      margin-bottom: 1rem; font-weight: 900;
+      margin-bottom: 1rem; font-weight: 900; color: #fff;
     }
-    .success .titulo { color: #fff; text-shadow: 0 0 20px rgba(52,211,153,0.4); }
-    .timeout .titulo { color: #fff; text-shadow: 0 0 20px rgba(239,68,68,0.4); }
+    .success .titulo { text-shadow: 0 0 20px rgba(52,211,153,0.4); }
+    .warning .titulo { text-shadow: 0 0 20px rgba(245,158,11,0.4); }
+    .timeout .titulo { text-shadow: 0 0 20px rgba(239,68,68,0.4); }
 
     .mensaje { font-size: 0.95rem; line-height: 1.6; color: #94a3b8; margin-bottom: 2rem; max-width: 520px; }
     .mensaje strong { color: #fff; }
 
-    /* Stats Globales */
+    /* Stats Globales (Grilla de 4) */
     .stats-global {
-      display: flex; gap: 1rem; width: 100%; justify-content: center; margin-bottom: 1.5rem; flex-wrap: wrap;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; width: 100%; justify-content: center; margin-bottom: 2.5rem;
     }
     .stat-box {
       background: var(--surface-2); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 1.2rem; flex: 1; min-width: 140px;
+      border-radius: var(--radius); padding: 1.2rem;
     }
     .stat-val { font-family: var(--font-mono); font-size: 1.8rem; font-weight: 700; color: var(--accent); margin-bottom: 0.2rem; }
     .success .stat-box .stat-val { color: var(--green); }
+    .warning .stat-box .stat-val { color: var(--gold); }
     .stat-lbl { font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
 
-    /* Nuevo: Puntaje Final Destacado */
-    .score-box { background: rgba(56,189,248,0.05); border: 1px solid rgba(56,189,248,0.2); }
-    .success .score-box { background: rgba(52,211,153,0.05); border-color: rgba(52,211,153,0.2); }
-    .timeout .score-box { background: rgba(239,68,68,0.05); border-color: rgba(239,68,68,0.2); }
-
-    /* Nuevo: Desglose de Niveles */
-    .levels-breakdown {
-      width: 100%; max-width: 520px; background: rgba(0,0,0,0.2); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 1.5rem; margin-bottom: 2.5rem; text-align: left;
-    }
-    .levels-title { font-family: var(--font-mono); font-size: 0.85rem; color: var(--muted); margin-bottom: 1rem; letter-spacing: 0.05em; text-transform: uppercase; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
-    .level-row {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 0.6rem 0; border-bottom: 1px dashed rgba(255,255,255,0.05);
-      font-size: 0.9rem;
-    }
-    .level-row:last-child { border-bottom: none; padding-bottom: 0; }
-    .lvl-name { color: #cbd5e1; }
-    .lvl-status { font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; }
-    .lvl-success { color: var(--green); }
-    .lvl-fail { color: var(--muted); }
+    .error-val { color: var(--red) !important; }
 
     /* Botón */
     .btn {
@@ -124,6 +109,10 @@
     .success .btn {
       background: linear-gradient(135deg, var(--green) 0%, #10b981 100%); color: #000;
       box-shadow: 0 0 30px rgba(52,211,153,0.3);
+    }
+    .warning .btn {
+      background: linear-gradient(135deg, var(--gold) 0%, #d97706 100%); color: #000;
+      box-shadow: 0 0 30px rgba(245,158,11,0.3);
     }
     .timeout .btn {
       background: linear-gradient(135deg, var(--accent) 0%, #0ea5e9 100%); color: #000;
@@ -141,7 +130,7 @@
 
     @media (max-width: 520px) {
       .card-body { padding: 2rem 1.25rem; }
-      .levels-breakdown { padding: 1rem; }
+      .stats-global { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -156,11 +145,9 @@
         <div class="icon-wrap" id="icon-resultado">🏆</div>
 
         <p class="eyebrow" id="text-eyebrow">Evaluación del Sistema</p>
-        <h1 class="titulo" id="text-titulo">MISIÓN CUMPLIDA</h1>
+        <h1 class="titulo" id="text-titulo">Calculando...</h1>
 
-        <p class="mensaje" id="text-mensaje">
-          Has restaurado con éxito el algoritmo central. Las decisiones matemáticas han vuelto a ser exactas.
-        </p>
+        <p class="mensaje" id="text-mensaje">Analizando el registro de eventos...</p>
 
         <!-- Stats -->
         <div class="stats-global">
@@ -169,20 +156,16 @@
             <div class="stat-lbl">Retos Restaurados</div>
           </div>
           <div class="stat-box">
+            <div class="stat-val error-val" id="stat-errores">0</div>
+            <div class="stat-lbl">Errores Cometidos</div>
+          </div>
+          <div class="stat-box">
             <div class="stat-val" id="stat-tiempo">00:00</div>
             <div class="stat-lbl">Tiempo Invertido</div>
           </div>
-          <div class="stat-box score-box">
+          <div class="stat-box">
             <div class="stat-val" id="stat-puntaje">0</div>
             <div class="stat-lbl">Puntaje Global</div>
-          </div>
-        </div>
-
-        <!-- Desglose -->
-        <div class="levels-breakdown">
-          <div class="levels-title">Reporte por Nivel</div>
-          <div id="levels-list">
-            <!-- Se inyectan con JS -->
           </div>
         </div>
 
@@ -201,22 +184,14 @@
       const TOTAL_RETOS = 6;
       const DURATION_SEC = 45 * 60;
       
-      const nombresRetos = [
-        "1. El mural que nadie midió", 
-        "2. El terreno que se recortó",
-        "3. El contenedor de doble cara", 
-        "4. El tanque de agua",
-        "5. El festival de matemáticas", 
-        "6. La fórmula justa del sistema"
-      ];
-
-      let estado = { startTime: Date.now(), resueltos: [], penalizacion: 0 };
+      let estado = { startTime: Date.now(), resueltos: [], penalizacion: 0, totalErrores: 0 };
       try {
         const saved = sessionStorage.getItem('er-state');
         if(saved) estado = JSON.parse(saved);
       } catch(e){}
 
       const resueltosCount = Array.isArray(estado.resueltos) ? estado.resueltos.length : 0;
+      const totalErrores = estado.totalErrores || 0;
       const exito = resueltosCount >= TOTAL_RETOS;
 
       // Cálculo de tiempo
@@ -229,13 +204,13 @@
       const timeStr = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
 
       // Cálculo de Puntaje
-      let score = resueltosCount * 1000; // 1000 base por reto
+      let score = resueltosCount * 1000; 
       if (exito) {
         let timeRemaining = Math.max(0, DURATION_SEC - totalTimeUsed);
-        score += Math.floor(timeRemaining * 1.5); // Bono de tiempo sobrante
+        score += Math.floor(timeRemaining * 1.5); 
       }
-      let penalizacionDeduccion = (penalizacion / 120) * 500; // Resta puntos si fue penalizado
-      score = Math.max(0, score - penalizacionDeduccion); // No bajar de cero
+      let penalizacionDeduccion = totalErrores * 300; // Restar 300 puntos por cada error
+      score = Math.max(0, score - penalizacionDeduccion); 
 
       // Elementos del DOM
       const card = document.getElementById('resultado-card');
@@ -245,37 +220,34 @@
       const mensaje = document.getElementById('text-mensaje');
 
       document.getElementById('stat-retos').textContent = resueltosCount + '/' + TOTAL_RETOS;
+      document.getElementById('stat-errores').textContent = totalErrores;
       document.getElementById('stat-tiempo').textContent = timeStr;
       document.getElementById('stat-puntaje').textContent = score;
 
-      if(exito){
-        card.classList.add('success');
-        icon.textContent = '⚡';
-        eyebrow.textContent = 'SISTEMA 100% RESTAURADO';
-        titulo.textContent = 'MISIÓN CUMPLIDA';
-        mensaje.innerHTML = 'Has recuperado el control total del algoritmo. Eres una leyenda del álgebra escolar. Las matemáticas han vuelto a la normalidad.';
+      if (exito) {
+        if (totalErrores === 0) {
+            // VICTORIA PERFECTA
+            card.classList.add('success');
+            icon.textContent = '⚡';
+            eyebrow.textContent = 'EJECUCIÓN PERFECTA';
+            titulo.textContent = 'SISTEMA 100% RESTAURADO';
+            mensaje.innerHTML = '¡Impecable! Has recuperado el control total del algoritmo sin cometer errores. Eres una leyenda del álgebra escolar.';
+        } else {
+            // VICTORIA CON ERRORES
+            card.classList.add('warning');
+            icon.textContent = '🛠️';
+            eyebrow.textContent = 'MISIÓN COMPLETADA CON ADVERTENCIAS';
+            titulo.textContent = 'SISTEMA INESTABLE';
+            mensaje.innerHTML = `Lograste llegar al final, pero el algoritmo detectó <strong>${totalErrores} errores</strong> durante tu ejecución. En matemáticas, terminar no significa hacerlo perfecto; la precisión es fundamental. Revisa tus conceptos y mejora tu técnica.`;
+        }
       } else {
+        // DERROTA / TIEMPO AGOTADO
         card.classList.add('timeout');
         icon.textContent = '⚠️';
         eyebrow.textContent = 'SISTEMA BLOQUEADO';
         titulo.textContent = 'MISIÓN FALLIDA';
-        mensaje.innerHTML = 'El tiempo se agotó o el sistema te bloqueó. Pero cada nodo restaurado fue un avance. <strong>Usa lo aprendido y vuelve a intentarlo.</strong>';
+        mensaje.innerHTML = `El tiempo se agotó o el sistema colapsó por exceso de errores. Cometiste <strong>${totalErrores} equivocaciones</strong>. Pero cada intento es aprendizaje, ¡usa lo aprendido y vuelve a intentarlo!`;
       }
-
-      // Generar lista de niveles
-      let levelsHtml = '';
-      nombresRetos.forEach((nombre, index) => {
-        let id = index + 1;
-        let isResolved = estado.resueltos && estado.resueltos.includes(id);
-        let statusClass = isResolved ? 'lvl-success' : 'lvl-fail';
-        let statusIcon = isResolved ? 'COMPLETADO' : 'BLOQUEADO';
-        levelsHtml += `
-          <div class="level-row">
-            <span class="lvl-name">${nombre}</span>
-            <span class="lvl-status ${statusClass}">${statusIcon}</span>
-          </div>`;
-      });
-      document.getElementById('levels-list').innerHTML = levelsHtml;
 
       // Lógica de reiniciar
       document.getElementById('btn-reiniciar').addEventListener('click', () => {
