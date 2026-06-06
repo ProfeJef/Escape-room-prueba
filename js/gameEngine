@@ -1082,25 +1082,26 @@ document.addEventListener("DOMContentLoaded", () => {
   // 1. Carga el estado guardado entre páginas
   loadEstado();
 
-  const path = window.location.pathname;
+  // 2. Lee la URL completa en lugar de solo el pathname
+  const urlActual = window.location.href.toLowerCase();
   
-  // 2. Determina si estamos en el index
-  const esIndex = path.includes("index.html") || path === "/" || path === "";
+  // 3. Determina si estamos en el index
+  // Si la URL no tiene "mapa", "reto" ni "cierre", asumimos que es el index
+  const esIndex = !urlActual.includes("mapa.html") && !urlActual.includes("reto.html") && !urlActual.includes("cierre.html");
 
-  // 3. Arranca el reloj en todas las páginas excepto en el inicio
+  // 4. Arranca el reloj en todas las páginas excepto en el inicio
   if (!esIndex) {
     startClock();
   }
 
-  // 4. Inicializa la lógica específica de la página actual
+  // 5. Inicializa la lógica específica de la página actual
   if (esIndex) {
     initVestibulo();
-  } else if (path.includes("mapa.html")) {
+  } else if (urlActual.includes("mapa.html")) {
     initMapa();
-  } else if (path.includes("reto.html")) {
+  } else if (urlActual.includes("reto.html")) {
     initReto();
-  } else if (path.includes("cierre.html")) {
+  } else if (urlActual.includes("cierre.html")) {
     initCierre();
   }
 });
-
