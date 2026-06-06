@@ -4,224 +4,123 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Reto Activo — Escape Room Algebraico</title>
-
-  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
-
+  
+  <!-- Referencia a tu hoja de estilos principal -->
+  <link rel="stylesheet" href="styles.css" />
+  
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
-    
-    :root {
-      --bg: #0a0c10; --surface: #0f1117; --surface-2: #151820; --border: rgba(255,255,255,0.07);
-      --accent: #38BDF8; --accent-2: #818CF8; --gold: #F59E0B; --green: #34D399; --red: #EF4444;
-      --pink: #F472B6; --text: #e2e8f0; --muted: #64748b; 
-      --font-body: 'Satoshi', sans-serif; --font-mono: 'Orbitron', monospace;
-      --radius: 12px; --radius-lg: 20px;
+    /* Estilos extra mínimos solo para el layout interno del feedback y el overlay de victoria */
+    .feedback-container {
+      display: none;
+      align-items: flex-start;
+      margin-top: 1.5rem;
     }
-    
-    body {
-      font-family: var(--font-body); background: var(--bg); color: var(--text);
-      min-height: 100dvh; display: flex; flex-direction: column; overflow-x: hidden;
+    .feedback-container.visible {
+      display: flex;
     }
-    
-    /* ── FONDOS ── */
-    .bg-grid { position: fixed; inset: 0; z-index: 0; background-image: linear-gradient(rgba(56,189,248,.03) 1px, transparent 1px), linear-gradient(90deg, rgba(56,189,248,.03) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none; }
-    .bg-glow { position: fixed; inset: 0; z-index: 0; background: radial-gradient(circle at 50% 0%, rgba(56,189,248,.05), transparent 50%); pointer-events: none; }
-
-    /* ── HEADER / RELOJ ── */
-    .top-bar { position: sticky; top: 0; z-index: 50; background: rgba(10,12,16,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; }
-    
-    .clock-wrap { display: flex; align-items: center; gap: 0.75rem; font-family: var(--font-mono); font-size: 1.25rem; font-weight: 700; color: var(--accent); }
-    .clock-wrap.warning { color: var(--gold); }
-    .clock-wrap.danger { color: var(--red); animation: pulse-danger 1s infinite; }
-    
-    /* Efecto cuando penalizan el tiempo */
-    .clock-wrap.penalizado { animation: shake-red 0.5s ease; color: var(--red); }
-    #penalizacion-txt { font-size: 0.8rem; background: rgba(239,68,68,0.15); color: var(--red); padding: 0.15rem 0.5rem; border-radius: 4px; }
-    .hidden { display: none !important; }
-    
-    .progress-wrap { display: flex; align-items: center; gap: 1rem; width: 100%; max-width: 250px; }
-    .progress-track { flex: 1; height: 6px; background: var(--surface-2); border-radius: 3px; overflow: hidden; }
-    .progress-fill { height: 100%; background: var(--accent); width: 0%; transition: width 0.4s ease; }
-    .progress-text { font-size: 0.75rem; font-weight: 700; color: var(--muted); letter-spacing: 0.1em; }
-
-    main { position: relative; z-index: 1; flex: 1; display: flex; justify-content: center; padding: 2rem 1.5rem; }
-
-    /* ── TARJETA DEL RETO ── */
-    .reto-card { width: 100%; max-width: 760px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2.5rem; display: flex; flex-direction: column; gap: 1.5rem; animation: fade-up 0.5s ease both; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
-
-    .reto-eyebrow { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); }
-    .reto-titulo { font-size: 1.8rem; font-weight: 700; color: #fff; line-height: 1.2; }
-    
-    .reto-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-    .rtag { font-size: 0.7rem; font-weight: 700; padding: 0.25rem 0.6rem; border-radius: 100px; text-transform: uppercase; letter-spacing: 0.05em; }
-    .rtag-green { background: rgba(52,211,153,0.1); color: var(--green); border: 1px solid rgba(52,211,153,0.2); }
-    .rtag-purple{ background: rgba(129,140,248,0.1); color: var(--accent-2); border: 1px solid rgba(129,140,248,0.2); }
-    .rtag-gold  { background: rgba(245,158,11,0.1); color: var(--gold); border: 1px solid rgba(245,158,11,0.2); }
-    .rtag-pink  { background: rgba(244,114,182,0.1); color: var(--pink); border: 1px solid rgba(244,114,182,0.2); }
-
-    .reto-narrativa { font-size: 1rem; color: #94a3b8; line-height: 1.6; background: var(--surface-2); padding: 1.25rem; border-radius: var(--radius); border-left: 3px solid var(--border); }
+    .reto-narrativa {
+      margin-top: 1rem;
+      padding: 1.2rem;
+      background: var(--surface-2);
+      border-radius: var(--radius-md);
+      border-left: 3px solid var(--accent);
+      color: var(--text-muted);
+    }
     .reto-narrativa strong { color: var(--text); }
     .reto-narrativa em { color: var(--accent-2); font-style: normal; }
-
-    .reto-enunciado { font-size: 1.15rem; font-weight: 500; color: #fff; }
     
-    /* ── HISTORIAL DE RETO ── */
-    .historial-reto { font-size: 0.8rem; color: var(--gold); font-style: italic; margin-top: -0.8rem; margin-bottom: 0.5rem; opacity: 0.8; }
-
-    /* ── CONTENEDORES DE OPCIONES ── */
-    #opciones-container { display: flex; flex-direction: column; gap: 1rem; margin-top: 0.5rem; }
-
-    /* Tipo 1: Selección Múltiple */
-    .opcion-pro { cursor: pointer; display: block; }
-    .radio-oculto { position: absolute; opacity: 0; pointer-events: none; }
-    .opcion-pro-inner { display: flex; align-items: center; padding: 1rem; background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius); transition: all 0.2s ease; gap: 1rem; }
-    .opcion-pro:hover .opcion-pro-inner { border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.03); }
-    .opcion-letra { width: 32px; height: 32px; border-radius: 6px; background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 0.85rem; font-weight: 700; color: var(--muted); transition: 0.2s; }
-    .opcion-texto { font-size: 1.05rem; color: var(--text); }
-    .opcion-pro-inner.selected { background: rgba(56,189,248,0.08); border-color: var(--accent); }
-    .opcion-pro-inner.selected .opcion-letra { background: var(--accent); color: #000; }
-
-    /* Tipo 2: Drag & Drop */
-    .drag-pool { display: flex; flex-wrap: wrap; gap: 0.75rem; padding: 1.5rem; background: rgba(255,255,255,0.02); border-radius: var(--radius); border: 1px dashed var(--border); }
-    .drag-chip { padding: 0.75rem 1.25rem; background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius); font-size: 1.05rem; cursor: grab; user-select: none; transition: 0.2s; }
-    .drag-chip:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
-    .drag-chip.dragging { opacity: 0.4; }
-    .drop-zone { min-height: 80px; border: 2px dashed var(--muted); border-radius: var(--radius); display: flex; align-items: center; justify-content: center; transition: 0.2s; background: rgba(0,0,0,0.2); padding: 1rem; }
-    .drop-zone.drag-over { border-color: var(--accent); background: rgba(56,189,248,0.05); }
-    .drop-placeholder { color: var(--muted); font-size: 0.9rem; pointer-events: none; }
-    .chip-en-zona { background: var(--accent); color: #000; border-color: var(--accent); cursor: pointer; }
-
-    /* Tipo 3: Inputs Textuales */
-    .tipo3-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem; background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius); }
-    .tipo3-expresion { font-size: 1.05rem; font-weight: 500; }
-    .tipo3-input { background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 6px; padding: 0.5rem 0.75rem; color: var(--text); font-family: var(--font-mono); font-size: 0.9rem; width: 120px; text-align: center; outline: none; transition: 0.2s; }
-    .tipo3-input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(56,189,248,0.2); }
-
-    /* Tipo 5: Respuesta Abierta */
-    .tipo5-wrap { background: var(--surface-2); padding: 1.5rem; border-radius: var(--radius); border: 1px solid var(--border); }
-    .tipo5-instruccion { font-size: 0.85rem; color: var(--gold); margin-bottom: 1rem; }
-    .tipo5-input-group { display: flex; flex-direction: column; gap: 0.5rem; }
-    .tipo5-input { background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 8px; padding: 0.85rem 1rem; color: var(--text); font-family: var(--font-body); font-size: 1.1rem; outline: none; transition: 0.2s; width: 100%; }
-    .tipo5-input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(56,189,248,0.2); }
-    .tipo5-hint { font-size: 0.8rem; color: var(--muted); }
-    .tipo5-hint code { background: rgba(255,255,255,0.05); padding: 2px 6px; border-radius: 4px; }
-
-    /* Tipo 6: Códigos */
-    .codigo-chip { display: block; font-family: var(--font-mono); font-size: 0.7rem; color: var(--accent-2); margin-top: 0.25rem; opacity: 0.8; }
-    .opcion-pro-inner.selected .codigo-chip { color: #000; opacity: 1; }
-
-    /* ── BOTONES Y FEEDBACK ── */
-    .acciones { margin-top: 1rem; display: flex; flex-direction: column; align-items: flex-start; gap: 0.5rem; }
-    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.75rem; padding: 1rem 2rem; font-family: var(--font-mono); font-size: 1rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; border: none; border-radius: var(--radius); cursor: pointer; transition: 0.2s ease; width: 100%; }
-    @media(min-width: 480px){ .btn { width: auto; } }
+    /* Animación pulso para el botón validar */
+    .pulse { animation: pulse 2s infinite; }
+    @keyframes pulse {
+      0%   { transform: scale(1); }
+      50%  { transform: scale(1.03); }
+      100% { transform: scale(1); }
+    }
     
-    .btn-primary { background: linear-gradient(135deg, var(--accent) 0%, #0ea5e9 100%); color: #000; box-shadow: 0 0 20px rgba(56,189,248,0.2); }
-    .btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 0 30px rgba(56,189,248,0.4); }
-    .btn-primary:disabled { background: var(--surface-2); color: var(--muted); box-shadow: none; cursor: not-allowed; opacity: 0.7; }
-    .btn-next { background: var(--surface-2); border: 1px solid var(--green); color: var(--green); }
-    .btn-next:hover { background: rgba(52,211,153,0.1); }
-
-    /* ── ALERTAS DE INTENTOS ── */
-    .intentos-alerta { font-size: 0.85rem; padding: 0.5rem 1rem; border-radius: 6px; background: rgba(255,255,255,0.05); color: var(--muted); margin-top: 0.5rem; width: 100%; text-align: left; }
-    .intentos-alerta.critico { background: rgba(245,158,11,0.1); color: var(--gold); border: 1px solid rgba(245,158,11,0.3); }
-    .intentos-alerta.exito { background: rgba(52,211,153,0.1); color: var(--green); border: 1px solid rgba(52,211,153,0.3); }
-
-    /* ── FEEDBACK FINAL ── */
-    .feedback-container { padding: 1.5rem; border-radius: var(--radius); display: none; align-items: flex-start; gap: 1rem; margin-top: 1rem; animation: fade-up 0.4s ease; border-left: 4px solid transparent; }
-    .feedback-container.visible { display: flex; }
-    .feedback-icon { font-size: 1.5rem; flex-shrink: 0; }
-    .feedback-content h3 { font-size: 1.1rem; margin-bottom: 0.25rem; font-weight: 700; }
-    .feedback-content p { font-size: 0.95rem; line-height: 1.5; color: #cbd5e1; }
-    .feedback-content strong { color: #fff; }
-
-    .feedback-container.correct { background: rgba(52,211,153,0.08); border-left-color: var(--green); }
-    .feedback-container.correct h3 { color: var(--green); }
-    .feedback-container.incorrect { background: rgba(239,68,68,0.08); border-left-color: var(--red); }
-    .feedback-container.incorrect h3 { color: var(--red); }
-    .feedback-container.warning { background: rgba(245,158,11,0.08); border-left-color: var(--gold); }
-    .feedback-container.warning h3 { color: var(--gold); }
-
-    /* ── BANNER DE PENALIZACIÓN ── */
-    .penalizacion-banner { position: fixed; top: 0; left: 0; width: 100%; background: var(--red); color: #fff; text-align: center; padding: 0.75rem; font-weight: 700; z-index: 1000; transform: translateY(-100%); transition: transform 0.3s ease; box-shadow: 0 4px 20px rgba(239,68,68,0.5); display: flex; justify-content: center; gap: 0.5rem; }
-    .penalizacion-banner.visible { transform: translateY(0); }
-
-    /* Animaciones */
-    @keyframes fade-up { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes pulse-danger { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-    @keyframes shake-red { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
-    
-    /* Overlay de Victoria */
-    .victory-overlay { position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; animation: fade-up 0.4s ease; }
-    .victory-content { text-align: center; background: var(--surface); padding: 3rem 2rem; border-radius: var(--radius-lg); border: 1px solid var(--accent); box-shadow: 0 0 50px rgba(56,189,248,0.2); max-width: 500px; width: 90%; }
+    /* Overlay de victoria para el reto 6 */
+    .victory-overlay {
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(15,23,42,0.95); backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .victory-overlay.hidden { display: none !important; }
+    .victory-content {
+      background: var(--surface); border: 1px solid var(--accent);
+      border-radius: var(--radius-lg); padding: 3rem; text-align: center;
+      max-width: 500px; width: 90%; box-shadow: 0 0 40px rgba(56,189,248,0.2);
+    }
     .victory-icon { font-size: 4rem; margin-bottom: 1rem; }
-    .victory-title { font-family: var(--font-mono); font-size: 1.8rem; color: var(--accent); margin-bottom: 0.5rem; }
-    .victory-sub { font-size: 1.1rem; color: var(--green); margin-bottom: 1.5rem; }
-    .victory-msg { font-size: 0.95rem; color: var(--muted); margin-bottom: 2rem; }
-    .confetti-particle { position: absolute; border-radius: 2px; top: -10px; pointer-events: none; }
+    .victory-title { font-size: 1.8rem; color: var(--accent); font-weight: 800; margin: 0 0 0.5rem 0; }
+    .victory-sub { color: var(--success); font-weight: 700; margin: 0 0 1.5rem 0; }
+    .victory-msg { color: var(--text-muted); margin-bottom: 2rem; }
   </style>
 </head>
-<body>
+<body class="reto-body">
 
-  <div class="bg-grid" aria-hidden="true"></div>
-  <div class="bg-glow" aria-hidden="true"></div>
-
-  <header class="top-bar">
-    <div class="clock-wrap" id="clock">
-      45:00
-      <span id="penalizacion-txt" class="hidden"></span>
-    </div>
-    <div class="progress-wrap">
-      <div class="progress-text">PROGRESO <span id="progress-txt">0/6</span></div>
-      <div class="progress-track">
-        <div class="progress-fill" id="progress-bar"></div>
+  <!-- NAVBAR / RELOJ -->
+  <header class="navbar">
+    <div class="navbar-inner">
+      <div class="progress-wrap">
+        <div class="clock" id="clock">45:00</div>
+        <!-- Etiqueta de penalización que aparece al lado del reloj -->
+        <span id="penalizacion-txt" class="hidden"></span>
+      </div>
+      <div class="progress-wrap" style="justify-content: flex-end;">
+        <span class="progress-txt">PROGRESO <span id="progress-txt">0/6</span></span>
+        <div class="progress">
+          <div class="progress-bar" id="progress-bar"></div>
+        </div>
       </div>
     </div>
   </header>
 
-  <main>
-    <article class="reto-card" aria-labelledby="reto-titulo">
+  <main class="reto-shell">
+    <div class="reto-content">
       
-      <header style="display:flex; flex-direction:column; gap:0.5rem;">
-        <p class="reto-eyebrow" id="reto-eyebrow"></p>
-        <h1 class="reto-titulo" id="reto-titulo"></h1>
-        <div class="reto-tags" id="reto-tags"></div>
-      </header>
+      <article class="reto-card" aria-labelledby="reto-titulo">
+        
+        <!-- Cabecera del reto: Nivel, Título y Tags -->
+        <header style="display:flex; flex-direction:column; gap:0.5rem;">
+          <p class="reto-eyebrow" id="reto-eyebrow"></p>
+          <h1 id="reto-titulo"></h1>
+          <div class="reto-tags" id="reto-tags"></div>
+        </header>
 
-      <div class="reto-narrativa" id="reto-narrativa"></div>
+        <!-- Historia o narrativa -->
+        <div class="reto-narrativa" id="reto-narrativa"></div>
 
-      <div style="height:1px; background:var(--border); margin: 0.5rem 0;"></div>
+        <div style="height:1px; background:var(--border); margin: 1.5rem 0;"></div>
 
-      <div class="reto-enunciado" id="reto-enunciado"></div>
-      
-      <!-- El historial de fallos se inyectará aquí (si existe) -->
+        <!-- La pregunta principal -->
+        <div id="reto-enunciado"></div>
+        
+        <!-- Aquí gameEngine.js inyectará el historial de fallos ("Llevas X intentos...") si los hay -->
+        
+        <!-- Contenedor donde JS inyectará las opciones (A, B, C, D o las de arrastrar) -->
+        <div id="opciones-container" class="opciones" style="margin-top: 1.5rem;"></div>
 
-      <div id="opciones-container">
-        <!-- JS inyecta las opciones según el tipo de reto -->
-      </div>
-
-      <div class="acciones">
-        <button id="btn-validar" class="btn btn-primary">Validar Respuesta</button>
-        <!-- La alerta de intentos se inyectará justo aquí debajo -->
-      </div>
-
-      <div id="feedback-container" class="feedback-container" aria-live="polite">
-        <div class="feedback-icon" id="feedback-icon"></div>
-        <div class="feedback-content">
-          <h3 id="feedback-title"></h3>
-          <p id="feedback-body"></p>
-          <a href="#" id="btn-next" class="btn btn-next hidden" style="margin-top:1rem; text-decoration:none;"></a>
+        <!-- Botones y Alertas -->
+        <div class="reto-actions" style="margin-top: 2rem; display: flex; flex-direction: column; align-items: stretch; gap: 0.5rem;">
+          <button id="btn-validar" class="btn btn-primary pulse">Validar Respuesta</button>
+          <!-- Aquí gameEngine.js inyectará la alerta roja/naranja de intentos -->
         </div>
-      </div>
 
-    </article>
+        <!-- Contenedor de Feedback (Mensaje de Correcto/Incorrecto) -->
+        <div id="feedback-container" class="feedback-container" aria-live="polite">
+          <div class="feedback-icon" id="feedback-icon" style="font-size: 1.8rem; margin-right: 1rem;"></div>
+          <div class="feedback-content">
+            <h3 id="feedback-title" style="margin: 0 0 0.25rem 0; font-size: 1.1rem;"></h3>
+            <p id="feedback-body" style="margin: 0; color: var(--text-muted); font-size: 0.95rem;"></p>
+            <a href="#" id="btn-next" class="btn btn-secondary hidden" style="margin-top:1.2rem;">Siguiente reto →</a>
+          </div>
+        </div>
+
+      </article>
+
+    </div>
   </main>
 
   <!-- MOTOR DEL JUEGO -->
   <script src="gameEngine.js"></script>
-
 </body>
 </html>
