@@ -4,121 +4,174 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mapa del Sistema — Escape Room Algebraico</title>
-  <link rel="stylesheet" href="css/styles.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
   
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+
   <style>
-    /* Estilos base consistentes con el diseño premium */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-font-smoothing: antialiased; }
     :root {
-      --bg: #0B0E14; --surface: #111827; --surface-2: #1E293B; --border: #334155;
-      --accent: #38BDF8; --accent-2: #818CF8; --success: #34D399; --warn: #FBBF24; --danger: #F87171;
-      --text: #F8FAFC; --text-muted: #94A3B8; --radius-lg: 16px; --radius-md: 12px;
-      font-family: 'Inter', sans-serif;
+      --bg:#0a0c10; --surface:#0f1117; --surface-2:#151820; --border:rgba(255,255,255,.07);
+      --accent:#38BDF8; --accent-2:#818CF8; --gold:#F59E0B; --green:#34D399; --pink:#F472B6; --red:#F87171;
+      --text:#e2e8f0; --muted:#64748b; --font-body:'Satoshi',sans-serif; --font-mono:'Orbitron',monospace;
+      --radius:12px; --radius-lg:20px;
     }
-    body { background-color: var(--bg); color: var(--text); margin: 0; min-height: 100vh; display: flex; flex-direction: column; }
+    body { font-family:var(--font-body); background:var(--bg); color:var(--text); min-height:100dvh; display:flex; flex-direction:column; overflow-x:hidden; }
     
-    /* Top Bar (Igual al reto) */
-    .top-bar { display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; border-bottom: 1px solid var(--border); background: var(--surface); }
-    .brand-logo { font-family: 'Space Mono', monospace; font-size: 1.2rem; font-weight: 700; color: var(--accent); display: flex; align-items: center; gap: 0.5rem; }
-    .brand-subtitle { color: var(--text-muted); font-family: 'Inter', sans-serif; font-size: 0.85rem; font-weight: 400; }
-    .top-stats { display: flex; gap: 1.5rem; align-items: center; }
-    .timer-badge { display: flex; align-items: center; gap: 0.5rem; background: var(--surface-2); padding: 0.5rem 1rem; border-radius: 99px; font-family: 'Space Mono', monospace; font-weight: 700; }
+    .bg-grid{position:fixed;inset:0;z-index:0;background-image:linear-gradient(rgba(56,189,248,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(56,189,248,.03) 1px,transparent 1px);background-size:60px 60px;pointer-events:none}
+    .bg-glow{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse 70% 50% at 15% 20%,rgba(56,189,248,.05) 0%,transparent 60%),radial-gradient(ellipse 60% 40% at 85% 80%,rgba(129,140,248,.04) 0%,transparent 60%);pointer-events:none}
+
+    header {
+      position:sticky; top:0; z-index:10; display:flex; align-items:center; justify-content:space-between;
+      padding:.75rem 1.25rem; background:rgba(10,12,16,.88); backdrop-filter:blur(12px); border-bottom:1px solid var(--border);
+    }
+    .header-left{display:flex;align-items:center;gap:.75rem}
+    .header-logo{font-family:var(--font-mono);font-size:.8rem;font-weight:700;letter-spacing:.08em;color:var(--accent)}
+    .header-title{font-size:.82rem;color:var(--muted)}
+    .header-right{display:flex;align-items:center;gap:1rem}
+    .clock-wrap{display:flex;align-items:center;gap:.5rem;padding:.4rem .9rem;background:var(--surface-2);border:1px solid var(--border);border-radius:999px}
+    #clock{font-family:var(--font-mono);font-size:.95rem;font-weight:700;color:var(--green);min-width:5ch}
+    #clock.warning{color:var(--gold)} #clock.danger{color:var(--red)}
+    .progreso-wrap{display:flex;align-items:center;gap:.5rem;font-size:.8rem;color:var(--muted)}
+    .barra-outer{width:90px;height:6px;background:var(--surface-2);border-radius:999px;overflow:hidden}
+    #progress-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent-2));transition:width .4s ease}
+    #progress-txt{font-family:var(--font-mono);font-size:.8rem;color:var(--accent);font-weight:700}
+
+    main { position:relative; z-index:1; flex:1; max-width: 1000px; width: 100%; margin: 0 auto; padding: 2rem; }
+    .mapa-titulo { font-family: var(--font-mono); font-size: 1.8rem; margin-bottom: 0.5rem; }
+    .mapa-desc { color: var(--muted); font-size: 0.95rem; margin-bottom: 2.5rem; }
     
-    /* Layout del Mapa */
-    .mapa-container { max-width: 1100px; margin: 0 auto; padding: 3rem 2rem; flex: 1; width: 100%; box-sizing: border-box; }
-    .mapa-header { margin-bottom: 3rem; }
-    .mapa-header h1 { font-size: 2.2rem; margin: 0 0 0.5rem 0; color: var(--text); }
-    .mapa-header p { color: var(--text-muted); font-size: 1.05rem; margin: 0; }
-    
-    /* Grid de tarjetas */
     .retos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+    .nodo {
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; text-decoration: none; color: inherit; transition: all 0.2s ease; position: relative;
+    }
+    .nodo-eyebrow { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
+    .nodo-titulo { font-family: var(--font-mono); font-size: 1.1rem; margin-bottom: 2rem; }
+    .nodo-status { font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
+
+    /* Estados nodo */
+    .nodo.locked { opacity: 0.5; pointer-events: none; background: rgba(255,255,255,0.01); }
+    .nodo.active { border-color: rgba(56,189,248,0.5); box-shadow: 0 0 20px rgba(56,189,248,0.1); }
+    .nodo.active:hover { transform: translateY(-3px); border-color: var(--accent); }
+    .nodo.active .nodo-eyebrow { color: var(--accent); }
+    .nodo.active .nodo-status { color: var(--accent); }
+    .nodo.done { border-color: rgba(52,211,153,0.3); background: rgba(52,211,153,0.03); }
+    .nodo.done .nodo-eyebrow { color: var(--green); }
+    .nodo.done .nodo-status { color: var(--green); }
     
-    /* Tarjeta individual */
-    .nodo-reto { display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; text-decoration: none; color: inherit; transition: all 0.2s ease; position: relative; overflow: hidden; }
-    .nodo-reto:hover { transform: translateY(-3px); }
-    
-    .nodo-titulo { font-size: 1.1rem; font-weight: 800; color: var(--text); margin-bottom: 0.5rem; }
-    .nodo-desc { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 2rem; flex-grow: 1; }
-    .nodo-status-label { font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; gap: 0.4rem; }
-    
-    /* Estados de la tarjeta controlados por JS */
-    .nodo-reto.locked { opacity: 0.6; cursor: not-allowed; background: rgba(30, 41, 59, 0.4); }
-    .nodo-reto.locked:hover { transform: none; }
-    
-    .nodo-reto.active-node { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
-    .nodo-reto.active-node .nodo-status-label { color: var(--accent); }
-    
-    .nodo-reto.completed { border-color: var(--border); background: rgba(52, 211, 153, 0.05); }
-    .nodo-reto.completed .nodo-status-label { color: var(--success); }
+    footer{position:relative;z-index:1;text-align:center;padding:1rem;font-size:.72rem;color:var(--muted);border-top:1px solid var(--border)}
+    footer span{color:var(--accent)}
   </style>
 </head>
 <body>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-glow" aria-hidden="true"></div>
 
-  <!-- TOP BAR -->
-  <header class="top-bar">
-    <div class="brand-logo">
-      EAP-2026 <span class="brand-subtitle">Navegación del sistema</span>
+  <header>
+    <div class="header-left">
+      <span class="header-logo">EAP·2026</span>
+      <span class="header-title">Navegación del sistema</span>
     </div>
-    <div class="top-stats">
-      <div class="timer-badge">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-        <span id="clock">45:00</span>
-        <span id="penalizacion-txt" class="hidden" style="color:var(--danger); font-size:0.8rem; margin-left:0.5rem;"></span>
-      </div>
-      <div class="timer-badge" style="color: var(--accent);">
+    <div class="header-right">
+      <div class="clock-wrap"><span aria-hidden="true">⏱</span><span id="clock">45:00</span></div>
+      <div class="progreso-wrap">
+        <div class="barra-outer"><div id="progress-bar"></div></div>
         <span id="progress-txt">0/6</span>
       </div>
     </div>
   </header>
 
-  <!-- MAIN LAYOUT -->
-  <main class="mapa-container">
-    <div class="mapa-header">
-      <h1>Nodos del Sistema</h1>
-      <p>Selecciona un reto disponible para avanzar en la recuperación de los datos.</p>
-    </div>
+  <main>
+    <h1 class="mapa-titulo">Nodos del Sistema</h1>
+    <p class="mapa-desc">Selecciona el reto activo para restablecer el algoritmo paso a paso.</p>
     
-    <div class="retos-grid">
-      <!-- Los IDs (nodo-1, nodo-2...) son detectados por gameEngine.js para activarlos -->
-      <a href="#" id="nodo-1" class="nodo-reto locked">
-        <span class="nodo-titulo">Reto 1</span>
-        <span class="nodo-desc">El mural que nadie midió</span>
-        <span class="nodo-status-label">Bloqueado</span>
-      </a>
-      
-      <a href="#" id="nodo-2" class="nodo-reto locked">
-        <span class="nodo-titulo">Reto 2</span>
-        <span class="nodo-desc">El terreno que se recortó</span>
-        <span class="nodo-status-label">Bloqueado</span>
-      </a>
-      
-      <a href="#" id="nodo-3" class="nodo-reto locked">
-        <span class="nodo-titulo">Reto 3</span>
-        <span class="nodo-desc">El contenedor de doble cara</span>
-        <span class="nodo-status-label">Bloqueado</span>
-      </a>
-      
-      <a href="#" id="nodo-4" class="nodo-reto locked">
-        <span class="nodo-titulo">Reto 4</span>
-        <span class="nodo-desc">El tanque de agua</span>
-        <span class="nodo-status-label">Bloqueado</span>
-      </a>
-      
-      <a href="#" id="nodo-5" class="nodo-reto locked">
-        <span class="nodo-titulo">Reto 5</span>
-        <span class="nodo-desc">El festival de matemáticas</span>
-        <span class="nodo-status-label">Bloqueado</span>
-      </a>
-      
-      <a href="#" id="nodo-6" class="nodo-reto locked">
-        <span class="nodo-titulo">Misión Final</span>
-        <span class="nodo-desc">La fórmula justa</span>
-        <span class="nodo-status-label">Bloqueado</span>
-      </a>
+    <div class="retos-grid" id="grid">
+      <!-- Los nodos se inyectan con el script para pintar el estado exacto -->
     </div>
   </main>
+  
+  <footer>Desarrollado por <span>Eduquemos con TIC</span> · Matemáticas 8° · 2026</footer>
 
-  <!-- CONEXIÓN AL MOTOR -->
-  <script src="js/gameEngine.js"></script>
+  <script>
+    const NOMBRES = [
+      "El mural que nadie midió", "El terreno que se recortó", "El contenedor de doble cara",
+      "El tanque de agua", "El festival de matemáticas", "La fórmula justa del sistema"
+    ];
+    const TOTAL_RETOS = 6;
+    const DURATION_SEC = 45 * 60;
+    
+    function loadState(){
+      try { return JSON.parse(sessionStorage.getItem('er-state')) || {startTime:Date.now(),resueltos:[],penalizacion:0}; }
+      catch(e){ return {startTime:Date.now(),resueltos:[],penalizacion:0}; }
+    }
+    
+    function formatTime(sec){ const m=Math.floor(sec/60), s=sec%60; return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0'); }
+    function getTiempoRestante(){ const st=loadState(); const elapsed=Math.floor((Date.now()-st.startTime)/1000); return Math.max(0, DURATION_SEC - elapsed - (st.penalizacion||0)); }
+
+    function renderMapa() {
+        const st = loadState();
+        const grid = document.getElementById('grid');
+        const resueltos = st.resueltos || [];
+        const siguiente = resueltos.length + 1;
+        
+        let html = '';
+        for(let i=1; i<=TOTAL_RETOS; i++) {
+            let clase = 'locked';
+            let status = '🔒 Bloqueado';
+            let link = '#';
+            
+            if(resueltos.includes(i)) {
+                clase = 'done';
+                status = '✅ Restaurado';
+                link = `reto.html?id=${i}`;
+            } else if (i === siguiente) {
+                clase = 'active';
+                status = '🔓 Disponible';
+                link = `reto.html?id=${i}`;
+            }
+            
+            html += `
+                <a href="${link}" class="nodo ${clase}">
+                    <div class="nodo-eyebrow">RETO ${i}</div>
+                    <div class="nodo-titulo">${NOMBRES[i-1]}</div>
+                    <div class="nodo-status">${status}</div>
+                </a>
+            `;
+        }
+        grid.innerHTML = html;
+        
+        // Reloj
+        const tick = () => {
+          const remaining = getTiempoRestante();
+          const clock = document.getElementById('clock');
+          clock.textContent = formatTime(remaining);
+          clock.classList.remove('warning','danger');
+          if(remaining <= 60) clock.classList.add('danger');
+          else if(remaining <= 300) clock.classList.add('warning');
+          
+          if(st.penalizacion > 0 && !document.getElementById('pen-txt')) {
+              clock.insertAdjacentHTML('afterend', `<span id="pen-txt" style="color:var(--red); font-size:0.75rem; margin-left:8px;">-${formatTime(st.penalizacion)}</span>`);
+          }
+          const pct = Math.round((resueltos.length / TOTAL_RETOS) * 100);
+          document.getElementById('progress-bar').style.width = pct + '%';
+          document.getElementById('progress-txt').textContent = resueltos.length + '/' + TOTAL_RETOS;
+          
+          if(remaining <= 0 && resueltos.length < TOTAL_RETOS) window.location.href = 'cierre.html';
+        };
+        tick(); setInterval(tick, 1000);
+        
+        // Si ya acabo todos
+        if(resueltos.length >= TOTAL_RETOS) window.location.href = 'cierre.html';
+    }
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        const st = loadState();
+        if(!st.startTime) { window.location.href = 'index.html'; return; }
+        renderMapa();
+    });
+  </script>
 </body>
 </html>
