@@ -1,35 +1,85 @@
 <!DOCTYPE html>
 <html lang="es" data-theme="dark">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mapa del Sistema — Escape Room Algebraico</title>
-  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
+  
+  <style>
+    /* Estilos base consistentes con el diseño premium */
+    :root {
+      --bg: #0B0E14; --surface: #111827; --surface-2: #1E293B; --border: #334155;
+      --accent: #38BDF8; --accent-2: #818CF8; --success: #34D399; --warn: #FBBF24; --danger: #F87171;
+      --text: #F8FAFC; --text-muted: #94A3B8; --radius-lg: 16px; --radius-md: 12px;
+      font-family: 'Inter', sans-serif;
+    }
+    body { background-color: var(--bg); color: var(--text); margin: 0; min-height: 100vh; display: flex; flex-direction: column; }
+    
+    /* Top Bar (Igual al reto) */
+    .top-bar { display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; border-bottom: 1px solid var(--border); background: var(--surface); }
+    .brand-logo { font-family: 'Space Mono', monospace; font-size: 1.2rem; font-weight: 700; color: var(--accent); display: flex; align-items: center; gap: 0.5rem; }
+    .brand-subtitle { color: var(--text-muted); font-family: 'Inter', sans-serif; font-size: 0.85rem; font-weight: 400; }
+    .top-stats { display: flex; gap: 1.5rem; align-items: center; }
+    .timer-badge { display: flex; align-items: center; gap: 0.5rem; background: var(--surface-2); padding: 0.5rem 1rem; border-radius: 99px; font-family: 'Space Mono', monospace; font-weight: 700; }
+    
+    /* Layout del Mapa */
+    .mapa-container { max-width: 1100px; margin: 0 auto; padding: 3rem 2rem; flex: 1; width: 100%; box-sizing: border-box; }
+    .mapa-header { margin-bottom: 3rem; }
+    .mapa-header h1 { font-size: 2.2rem; margin: 0 0 0.5rem 0; color: var(--text); }
+    .mapa-header p { color: var(--text-muted); font-size: 1.05rem; margin: 0; }
+    
+    /* Grid de tarjetas */
+    .retos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+    
+    /* Tarjeta individual */
+    .nodo-reto { display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; text-decoration: none; color: inherit; transition: all 0.2s ease; position: relative; overflow: hidden; }
+    .nodo-reto:hover { transform: translateY(-3px); }
+    
+    .nodo-titulo { font-size: 1.1rem; font-weight: 800; color: var(--text); margin-bottom: 0.5rem; }
+    .nodo-desc { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 2rem; flex-grow: 1; }
+    .nodo-status-label { font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; gap: 0.4rem; }
+    
+    /* Estados de la tarjeta controlados por JS */
+    .nodo-reto.locked { opacity: 0.6; cursor: not-allowed; background: rgba(30, 41, 59, 0.4); }
+    .nodo-reto.locked:hover { transform: none; }
+    
+    .nodo-reto.active-node { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+    .nodo-reto.active-node .nodo-status-label { color: var(--accent); }
+    
+    .nodo-reto.completed { border-color: var(--border); background: rgba(52, 211, 153, 0.05); }
+    .nodo-reto.completed .nodo-status-label { color: var(--success); }
+  </style>
 </head>
 <body>
 
-  <!-- NAVBAR / RELOJ -->
-  <nav class="navbar">
-    <div class="navbar-inner">
-      <div class="progress-wrap">
-        <div class="clock" id="clock">45:00</div>
-        <span id="penalizacion-txt" class="hidden"></span>
+  <!-- TOP BAR -->
+  <header class="top-bar">
+    <div class="brand-logo">
+      EAP-2026 <span class="brand-subtitle">Navegación del sistema</span>
+    </div>
+    <div class="top-stats">
+      <div class="timer-badge">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        <span id="clock">45:00</span>
+        <span id="penalizacion-txt" class="hidden" style="color:var(--danger); font-size:0.8rem; margin-left:0.5rem;"></span>
       </div>
-      <div class="progress-wrap" style="justify-content: flex-end;">
-        <span class="progress-txt">PROGRESO <span id="progress-txt">0/6</span></span>
-        <div class="progress">
-          <div class="progress-bar" id="progress-bar"></div>
-        </div>
+      <div class="timer-badge" style="color: var(--accent);">
+        <span id="progress-txt">0/6</span>
       </div>
     </div>
-  </nav>
+  </header>
 
-  <main class="retos-container">
-    <h2 style="margin-top:0;">Nodos del Sistema</h2>
-    <p class="mapa-intro">Selecciona un reto disponible para avanzar en la recuperación de los datos.</p>
+  <!-- MAIN LAYOUT -->
+  <main class="mapa-container">
+    <div class="mapa-header">
+      <h1>Nodos del Sistema</h1>
+      <p>Selecciona un reto disponible para avanzar en la recuperación de los datos.</p>
+    </div>
     
     <div class="retos-grid">
-      <!-- Los IDs (nodo-1, nodo-2...) son buscados por el JS para colorearlos -->
+      <!-- Los IDs (nodo-1, nodo-2...) son detectados por gameEngine.js para activarlos -->
       <a href="#" id="nodo-1" class="nodo-reto locked">
         <span class="nodo-titulo">Reto 1</span>
         <span class="nodo-desc">El mural que nadie midió</span>
@@ -68,6 +118,7 @@
     </div>
   </main>
 
+  <!-- CONEXIÓN AL MOTOR -->
   <script src="js/gameEngine.js"></script>
 </body>
 </html>
