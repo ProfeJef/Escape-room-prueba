@@ -81,7 +81,7 @@
     .warning .titulo { text-shadow: 0 0 20px rgba(245,158,11,0.4); }
     .timeout .titulo { text-shadow: 0 0 20px rgba(239,68,68,0.4); }
 
-    .mensaje { font-size: 0.95rem; line-height: 1.6; color: #94a3b8; margin-bottom: 2rem; max-width: 520px; }
+    .mensaje { font-size: 0.95rem; line-height: 1.6; color: #94a3b8; margin-bottom: 2rem; max-width: 540px; }
     .mensaje strong { color: #fff; }
 
     /* Stats Globales (Grilla de 4) */
@@ -209,7 +209,7 @@
         let timeRemaining = Math.max(0, DURATION_SEC - totalTimeUsed);
         score += Math.floor(timeRemaining * 1.5); 
       }
-      let penalizacionDeduccion = totalErrores * 300; // Restar 300 puntos por cada error
+      let penalizacionDeduccion = totalErrores * 300; 
       score = Math.max(0, score - penalizacionDeduccion); 
 
       // Elementos del DOM
@@ -231,22 +231,22 @@
             icon.textContent = '⚡';
             eyebrow.textContent = 'EJECUCIÓN PERFECTA';
             titulo.textContent = 'SISTEMA 100% RESTAURADO';
-            mensaje.innerHTML = '¡Impecable! Has recuperado el control total del algoritmo sin cometer errores. Eres una leyenda del álgebra escolar.';
+            mensaje.innerHTML = '¡Impecable! Has recuperado el control total del algoritmo sin cometer errores. Tienes una comprensión sólida de los patrones algebraicos. Eres una leyenda del álgebra escolar.';
         } else {
-            // VICTORIA CON ERRORES
+            // VICTORIA CON ERRORES - ENFOQUE PEDAGÓGICO
             card.classList.add('warning');
             icon.textContent = '🛠️';
-            eyebrow.textContent = 'MISIÓN COMPLETADA CON ADVERTENCIAS';
-            titulo.textContent = 'SISTEMA INESTABLE';
-            mensaje.innerHTML = `Lograste llegar al final, pero el algoritmo detectó <strong>${totalErrores} errores</strong> durante tu ejecución. En matemáticas, terminar no significa hacerlo perfecto; la precisión es fundamental. Revisa tus conceptos y mejora tu técnica.`;
+            eyebrow.textContent = 'MISIÓN COMPLETADA CON OBSERVACIONES';
+            titulo.textContent = 'SISTEMA RESTAURADO';
+            mensaje.innerHTML = `Llegar al final demuestra gran perseverancia, ¡buen trabajo! El algoritmo registró <strong>${totalErrores} errores</strong>, los cuales son excelentes oportunidades de aprendizaje. Muchos de estos fallos ocurren al olvidar el doble producto en un binomio al cuadrado (el famoso <em>2ab</em>) o al confundir la ley de los signos. Tómate un momento para reflexionar sobre los pasos donde dudaste. ¡La precisión algebraica se construye analizando nuestros propios intentos!`;
         }
       } else {
-        // DERROTA / TIEMPO AGOTADO
+        // DERROTA / TIEMPO AGOTADO - ENFOQUE PEDAGÓGICO
         card.classList.add('timeout');
-        icon.textContent = '⚠️';
+        icon.textContent = '⏱️';
         eyebrow.textContent = 'SISTEMA BLOQUEADO';
-        titulo.textContent = 'MISIÓN FALLIDA';
-        mensaje.innerHTML = `El tiempo se agotó o el sistema colapsó por exceso de errores. Cometiste <strong>${totalErrores} equivocaciones</strong>. Pero cada intento es aprendizaje, ¡usa lo aprendido y vuelve a intentarlo!`;
+        titulo.textContent = 'TIEMPO AGOTADO';
+        mensaje.innerHTML = `Has realizado un gran esfuerzo, pero los <strong>${totalErrores} errores</strong> acumulados consumieron el tiempo disponible. ¡No te desanimes! En matemáticas, la agilidad mental llega únicamente después de dominar la precisión. Identifica en qué misiones tuviste mayores dificultades (¿factorización? ¿binomios?) y repasa las reglas estructurales. La persistencia es la verdadera clave del éxito algebraico. ¡Vuelve a intentarlo!`;
       }
 
       // Lógica de reiniciar
