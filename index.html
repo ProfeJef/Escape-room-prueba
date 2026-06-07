@@ -202,7 +202,7 @@
       display:flex; align-items:center; gap:.6rem;
       margin-top:1rem; padding:.6rem 1rem;
       background:rgba(245,158,11,.06); border:1px solid rgba(245,158,11,.2);
-      border-radius:8px; font-size:.78rem; color:#fbbf24;
+      border-radius:8px; font-size:.78rem; color:#fbbf24; line-height: 1.4;
     }
 
     footer {
@@ -287,7 +287,7 @@
               Reglas
             </div>
             <ol class="reglas-list">
-              <li><span class="regla-num">1</span>Cada error descuenta 2 min.</li>
+              <li><span class="regla-num">1</span>Errores restan 5 min y 10 min.</li>
               <li><span class="regla-num">2</span>Primer error → pista automática.</li>
               <li><span class="regla-num">3</span>Segundo error → explicación.</li>
               <li><span class="regla-num">4</span>Retos en orden estricto.</li>
@@ -310,8 +310,8 @@
           </div>
           <div class="stat-chip">
             <span class="stat-icon" aria-hidden="true">⚡</span>
-            <span class="stat-val">−2 min</span>
-            <span class="stat-lbl">Por error ×3</span>
+            <span class="stat-val">−5 min</span>
+            <span class="stat-lbl">Por error</span>
           </div>
         </div>
 
@@ -325,7 +325,7 @@
         <!-- Warning -->
         <div class="warning-strip" role="note">
           <span aria-hidden="true">⚠</span>
-          <span>Cada 3 errores consecutivos en un reto descuentan <strong>2 minutos</strong> del tiempo disponible.</span>
+          <span>Cada error descuenta <strong>5 minutos</strong>. El tercer fallo consecutivo en un mismo reto resta <strong>10 minutos</strong> del tiempo disponible.</span>
         </div>
 
       </div>
@@ -339,11 +339,12 @@
   <!-- ── Lógica del botón embebida (no depende de gameEngine.js) ── -->
   <script>
     document.getElementById('btn-iniciar-mision').addEventListener('click', function() {
-      // Reinicia el estado en sessionStorage
+      // Reinicia el estado en sessionStorage con el contador global de errores en 0
       var estado = {
         startTime:       Date.now(),
         resueltos:       [],
         penalizacion:    0,
+        totalErrores:    0,
         intentosPorReto: {}
       };
       try {
