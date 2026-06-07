@@ -70,7 +70,15 @@
     }
     .header-left { display: flex; align-items: center; gap: 1rem; }
     .logo-link { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; }
-    .logo-svg { width: 32px; height: 32px; display: block; }
+    
+    /* Configuración específica para el SVG en el Header */
+    .logo-svg { 
+      width: 40px; 
+      height: 40px; 
+      display: block;
+      filter: drop-shadow(0 0 4px rgba(56,189,248,0.3));
+    }
+    
     .logo-text {
       font-family: var(--font-mono); font-size: 1.05rem; font-weight: 700; letter-spacing: 0.05em;
       background: linear-gradient(90deg, #00FFFF, #B026FF);
@@ -258,4 +266,461 @@
       font-size: 1.5rem; flex-shrink: 0;
       border: 1px solid var(--border);
       background: var(--surface-2);
-      transition: background 0.3s 
+      transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    a.nodo.active-node .nodo-icon {
+      background: rgba(56,189,248,0.1);
+      border-color: rgba(56,189,248,0.35);
+      box-shadow: 0 0 16px rgba(56,189,248,0.2);
+    }
+    a.nodo.completed .nodo-icon {
+      background: rgba(52,211,153,0.1);
+      border-color: rgba(52,211,153,0.35);
+    }
+
+    /* Contenido textual */
+    .nodo-content { flex: 1; min-width: 0; }
+    .nodo-eyebrow {
+      font-size: 0.68rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 0.2rem;
+    }
+    .nodo-titulo {
+      font-family: var(--font-mono); font-size: 0.9rem;
+      font-weight: 700; color: var(--text);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .nodo-formula {
+      font-size: 0.8rem; color: var(--muted);
+      margin-top: 0.2rem;
+    }
+
+    /* Badge de estado */
+    .nodo-status-label {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      padding: 0.25rem 0.7rem; border-radius: 999px;
+      font-size: 0.68rem; font-weight: 700;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      white-space: nowrap; flex-shrink: 0;
+      border: 1px solid transparent;
+    }
+    .status-locked {
+      background: rgba(255,255,255,0.04);
+      border-color: var(--border); color: var(--muted);
+    }
+    .status-active {
+      background: rgba(56,189,248,0.12);
+      border-color: rgba(56,189,248,0.3);
+      color: var(--accent);
+      animation: pulse-badge 2s ease-in-out infinite;
+    }
+    @keyframes pulse-badge {
+      0%,100%{box-shadow:0 0 0 0 rgba(56,189,248,0.3)}
+      50%{box-shadow:0 0 0 6px rgba(56,189,248,0)}
+    }
+    .status-completed {
+      background: rgba(52,211,153,0.12);
+      border-color: rgba(52,211,153,0.3);
+      color: var(--green);
+    }
+
+    /* Flecha derecha */
+    .nodo-arrow {
+      font-size: 1.1rem; color: var(--muted);
+      flex-shrink: 0; opacity: 0;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    a.nodo.active-node .nodo-arrow,
+    a.nodo.completed   .nodo-arrow {
+      opacity: 1; color: var(--accent);
+    }
+    a.nodo:hover .nodo-arrow { transform: translateX(4px); }
+
+    /* ── Reto final especial ─────────────────────────── */
+    a.nodo[data-id="6"].active-node {
+      border-color: rgba(245,158,11,0.4);
+      background: linear-gradient(135deg,rgba(245,158,11,0.06),rgba(244,114,182,0.04));
+      box-shadow: 0 0 40px rgba(245,158,11,0.1);
+    }
+    a.nodo[data-id="6"].active-node .nodo-icon {
+      background: rgba(245,158,11,0.12);
+      border-color: rgba(245,158,11,0.4);
+      box-shadow: 0 0 20px rgba(245,158,11,0.2);
+    }
+    a.nodo[data-id="6"].active-node .nodo-status-label {
+      background: rgba(245,158,11,0.12);
+      border-color: rgba(245,158,11,0.35);
+      color: var(--gold);
+      animation: pulse-gold 2s ease-in-out infinite;
+    }
+    @keyframes pulse-gold {
+      0%,100%{box-shadow:0 0 0 0 rgba(245,158,11,0.3)}
+      50%{box-shadow:0 0 0 6px rgba(245,158,11,0)}
+    }
+    a.nodo[data-id="6"].active-node .nodo-arrow { color: var(--gold); }
+
+    /* ── Tags de dificultad ─────────────────────────── */
+    .nodo-tags { display: flex; gap: 0.4rem; margin-top: 0.35rem; flex-wrap: wrap; }
+    .ntag {
+      padding: 0.1em 0.5em; border-radius: 4px;
+      font-size: 0.62rem; font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+    .ntag-green  { background:rgba(52,211,153,.12); color:var(--green); }
+    .ntag-gold   { background:rgba(245,158,11,.12); color:var(--gold); }
+    .ntag-pink   { background:rgba(244,114,182,.12);color:var(--pink); }
+    .ntag-purple { background:rgba(129,140,248,.12);color:var(--accent-2); }
+
+    /* ── Footer ─────────────────────────────────────── */
+    footer {
+      position: relative; z-index: 1;
+      text-align: center; padding: 1rem;
+      font-size: 0.72rem; color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+    footer span { color: var(--accent); }
+
+    /* ── Responsive ──────────────────────────────────── */
+    @media (max-width: 520px) {
+      .logo-text span { display: none; }
+      .nodo-formula { display: none; }
+      .nodo-tags    { display: none; }
+      .barra-outer  { width: 50px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-glow" aria-hidden="true"></div>
+
+  <!-- ── HEADER PREMIUM ── -->
+  <header>
+    <div class="header-left">
+      <a href="index.html" class="logo-link">
+        
+        <!-- ÍCONO SVG CEREBRO-CIRCUITO -->
+        <svg class="logo-svg" viewBox="50 50 200 200" xmlns="http://www.w3.org/2000/svg">
+          <g>
+            <circle cx="150" cy="150" r="90" fill="none" stroke="#00FFFF" stroke-width="2" stroke-dasharray="12 6 3 6" opacity="0.4"/>
+            <path d="M 150 80 L 90 105 L 150 130 L 210 105 Z" fill="none" stroke="#00FFFF" stroke-width="5" stroke-linejoin="round"/>
+            <path d="M 120 120 V 145 L 150 158 L 180 145 V 120" fill="none" stroke="#00FFFF" stroke-width="5" stroke-linejoin="round"/>
+            <g stroke="#00FFFF" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M 145 135 C 120 130, 100 140, 95 155 C 85 155, 80 170, 90 180 C 80 190, 85 210, 100 215 C 95 225, 110 235, 125 230 C 135 235, 145 225, 145 215 Z"/>
+            </g>
+            <g stroke="#B026FF" stroke-width="5.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M 155 135 V 235"/>
+              <path d="M 155 155 H 170 L 180 145 H 195"/> <circle cx="195" cy="145" r="5" fill="#B026FF"/>
+              <path d="M 155 175 H 165 L 175 185 H 205"/> <circle cx="205" cy="185" r="5" fill="#B026FF"/>
+              <path d="M 155 195 H 175 L 185 205 H 195"/> <circle cx="195" cy="205" r="5" fill="#B026FF"/>
+            </g>
+          </g>
+        </svg>
+
+        <!-- TEXTO DEL LOGO -->
+        <span class="logo-text">Eduquémonos<span>con</span>TIC</span>
+      </a>
+    </div>
+
+    <!-- Reloj y Progreso -->
+    <div class="header-right">
+      <div class="clock-wrap" aria-label="Tiempo restante">
+        <span class="clock-icon" aria-hidden="true">⏱</span>
+        <span id="clock" aria-live="polite">45:00</span>
+        <span id="penalizacion-txt" class="hidden" aria-live="assertive"></span>
+      </div>
+      <div class="progreso-wrap" aria-label="Retos completados">
+        <div class="barra-outer">
+          <div id="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+        </div>
+        <span id="progress-txt">0/6</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── MAIN ── -->
+  <main>
+
+    <div class="mapa-header">
+      <p class="mapa-eyebrow">Ruta de misión</p>
+      <h1 class="mapa-titulo">SELECCIONA TU RETO</h1>
+      <p class="mapa-sub">Completa cada nivel en orden para desbloquear el siguiente</p>
+    </div>
+
+    <!-- ── CAMINO ── -->
+    <div class="mapa-path" role="list" aria-label="Retos del escape room">
+
+      <!-- RETO 1 -->
+      <div class="nodo-wrap" role="listitem">
+        <a id="nodo-1" class="nodo locked" data-id="1"
+           href="#" aria-label="Reto 1: El mural que nadie midió">
+          <div class="nodo-icon" aria-hidden="true">🎨</div>
+          <div class="nodo-content">
+            <p class="nodo-eyebrow">Nivel 1 · Cuadrado de suma</p>
+            <p class="nodo-titulo">El mural que nadie midió</p>
+            <p class="nodo-formula">(a+b)² = a² + 2ab + b²</p>
+            <div class="nodo-tags">
+              <span class="ntag ntag-green">Básico</span>
+              <span class="ntag ntag-purple">(a+b)²</span>
+            </div>
+          </div>
+          <span class="nodo-status-label status-locked" aria-label="Estado del reto">🔒 Bloqueado</span>
+          <span class="nodo-arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+
+      <!-- Conector 1→2 -->
+      <div class="conector" id="conector-1" aria-hidden="true">
+        <div class="conector-line" id="line-1"></div>
+        <span class="conector-arrow" id="arrow-1">▼</span>
+        <div class="conector-line"></div>
+      </div>
+
+      <!-- RETO 2 -->
+      <div class="nodo-wrap" role="listitem">
+        <a id="nodo-2" class="nodo locked" data-id="2"
+           href="#" aria-label="Reto 2: El terreno que se recortó">
+          <div class="nodo-icon" aria-hidden="true">🌱</div>
+          <div class="nodo-content">
+            <p class="nodo-eyebrow">Nivel 2 · Cuadrado de diferencia</p>
+            <p class="nodo-titulo">El terreno que se recortó</p>
+            <p class="nodo-formula">(a−b)² = a² − 2ab + b²</p>
+            <div class="nodo-tags">
+              <span class="ntag ntag-green">Fácil</span>
+              <span class="ntag ntag-purple">(a−b)²</span>
+            </div>
+          </div>
+          <span class="nodo-status-label status-locked">🔒 Bloqueado</span>
+          <span class="nodo-arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+
+      <!-- Conector 2→3 -->
+      <div class="conector" id="conector-2" aria-hidden="true">
+        <div class="conector-line" id="line-2"></div>
+        <span class="conector-arrow" id="arrow-2">▼</span>
+        <div class="conector-line"></div>
+      </div>
+
+      <!-- RETO 3 -->
+      <div class="nodo-wrap" role="listitem">
+        <a id="nodo-3" class="nodo locked" data-id="3"
+           href="#" aria-label="Reto 3: El contenedor de doble cara">
+          <div class="nodo-icon" aria-hidden="true">📦</div>
+          <div class="nodo-content">
+            <p class="nodo-eyebrow">Nivel 3 · Diferencia de cuadrados</p>
+            <p class="nodo-titulo">El contenedor de doble cara</p>
+            <p class="nodo-formula">(a+b)(a−b) = a² − b²</p>
+            <div class="nodo-tags">
+              <span class="ntag ntag-gold">Medio</span>
+              <span class="ntag ntag-purple">(a+b)(a−b)</span>
+            </div>
+          </div>
+          <span class="nodo-status-label status-locked">🔒 Bloqueado</span>
+          <span class="nodo-arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+
+      <!-- Conector 3→4 -->
+      <div class="conector" id="conector-3" aria-hidden="true">
+        <div class="conector-line" id="line-3"></div>
+        <span class="conector-arrow" id="arrow-3">▼</span>
+        <div class="conector-line"></div>
+      </div>
+
+      <!-- RETO 4 -->
+      <div class="nodo-wrap" role="listitem">
+        <a id="nodo-4" class="nodo locked" data-id="4"
+           href="#" aria-label="Reto 4: El tanque de agua del colegio">
+          <div class="nodo-icon" aria-hidden="true">💧</div>
+          <div class="nodo-content">
+            <p class="nodo-eyebrow">Nivel 4 · Cubo de binomio</p>
+            <p class="nodo-titulo">El tanque de agua del colegio</p>
+            <p class="nodo-formula">(a+b)³ = a³ + 3a²b + 3ab² + b³</p>
+            <div class="nodo-tags">
+              <span class="ntag ntag-gold">Medio-alto</span>
+              <span class="ntag ntag-purple">(a+b)³</span>
+            </div>
+          </div>
+          <span class="nodo-status-label status-locked">🔒 Bloqueado</span>
+          <span class="nodo-arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+
+      <!-- Conector 4→5 -->
+      <div class="conector" id="conector-4" aria-hidden="true">
+        <div class="conector-line" id="line-4"></div>
+        <span class="conector-arrow" id="arrow-4">▼</span>
+        <div class="conector-line"></div>
+      </div>
+
+      <!-- RETO 5 -->
+      <div class="nodo-wrap" role="listitem">
+        <a id="nodo-5" class="nodo locked" data-id="5"
+           href="#" aria-label="Reto 5: El festival de matemáticas">
+          <div class="nodo-icon" aria-hidden="true">🎪</div>
+          <div class="nodo-content">
+            <p class="nodo-eyebrow">Nivel 5 · Factorización compuesta</p>
+            <p class="nodo-titulo">El festival de matemáticas</p>
+            <p class="nodo-formula">Factor común + diferencia de cuadrados</p>
+            <div class="nodo-tags">
+              <span class="ntag ntag-pink">Alto</span>
+              <span class="ntag ntag-purple">Factor común</span>
+            </div>
+          </div>
+          <span class="nodo-status-label status-locked">🔒 Bloqueado</span>
+          <span class="nodo-arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+
+      <!-- Conector 5→6 -->
+      <div class="conector" id="conector-5" aria-hidden="true">
+        <div class="conector-line" id="line-5"></div>
+        <span class="conector-arrow" id="arrow-5">▼</span>
+        <div class="conector-line"></div>
+      </div>
+
+      <!-- RETO 6 — MISIÓN FINAL -->
+      <div class="nodo-wrap" role="listitem">
+        <a id="nodo-6" class="nodo locked" data-id="6"
+           href="#" aria-label="Reto 6: La fórmula justa del sistema — Misión final">
+          <div class="nodo-icon" aria-hidden="true">⚡</div>
+          <div class="nodo-content">
+            <p class="nodo-eyebrow">Nivel 6 · Misión final · Experto</p>
+            <p class="nodo-titulo">La fórmula justa del sistema</p>
+            <p class="nodo-formula">Binomios con fracciones · Simplificación</p>
+            <div class="nodo-tags">
+              <span class="ntag ntag-pink">Experto</span>
+              <span class="ntag ntag-gold">Misión final</span>
+            </div>
+          </div>
+          <span class="nodo-status-label status-locked">🔒 Bloqueado</span>
+          <span class="nodo-arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    Desarrollado por <span>Eduquemos con TIC</span> · Matemáticas 8° · 2026
+  </footer>
+
+  <script>
+    // ── LÓGICA DE JUEGO A PRUEBA DE FALLOS ──
+    const TOTAL_RETOS = 6;
+    const DURATION_SEC = 45 * 60;
+
+    function getOrInitState() {
+      let st = { startTime: Date.now(), resueltos: [], penalizacion: 0 };
+      try {
+        const saved = sessionStorage.getItem('er-state');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed && parsed.startTime) {
+            st = parsed; 
+          }
+        }
+      } catch(e) {}
+      
+      sessionStorage.setItem('er-state', JSON.stringify(st));
+      return st;
+    }
+    
+    function formatTime(sec){ 
+      const m = Math.floor(sec/60);
+      const s = sec%60; 
+      return String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0'); 
+    }
+    
+    function getTiempoRestante(estadoActual){ 
+      const elapsed = Math.floor((Date.now() - estadoActual.startTime) / 1000); 
+      return Math.max(0, DURATION_SEC - elapsed - (estadoActual.penalizacion || 0)); 
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const st = getOrInitState();
+
+      // ─── 1. RENDERIZAR MAPA (Candados y Conectores) ───
+      const resueltos = Array.isArray(st.resueltos) ? st.resueltos : [];
+      const siguiente = resueltos.length + 1;
+
+      for (let id = 1; id <= TOTAL_RETOS; id++) {
+        const nodo = document.getElementById('nodo-' + id);
+        if (!nodo) continue;
+
+        nodo.classList.remove('completed', 'active-node', 'locked');
+        const badge = nodo.querySelector('.nodo-status-label');
+
+        if (resueltos.includes(id)) {
+          nodo.classList.add('completed');
+          nodo.href = 'reto.html?id=' + id;
+          nodo.removeAttribute('aria-disabled');
+          if (badge) {
+            badge.className = 'nodo-status-label status-completed';
+            badge.textContent = '✓ Completado';
+          }
+          const lineEl = document.getElementById('line-' + id);
+          const arrowEl = document.getElementById('arrow-' + id);
+          if (lineEl) lineEl.classList.add('done');
+          if (arrowEl) arrowEl.classList.add('done');
+          
+        } else if (id === siguiente) {
+          nodo.classList.add('active-node');
+          nodo.href = 'reto.html?id=' + id;
+          nodo.removeAttribute('aria-disabled');
+          if (badge) {
+            badge.className = 'nodo-status-label status-active';
+            badge.textContent = id === TOTAL_RETOS ? '🔓 ¡Misión final!' : '🔓 Disponible';
+          }
+          
+        } else {
+          nodo.classList.add('locked');
+          nodo.href = '#';
+          nodo.setAttribute('aria-disabled', 'true');
+          if (badge) {
+            badge.className = 'nodo-status-label status-locked';
+            badge.textContent = '🔒 Bloqueado';
+          }
+        }
+      }
+
+      // ─── 2. MANEJO DEL RELOJ Y PENALIZACIÓN ───
+      const tick = () => {
+        let currentSt = getOrInitState();
+        const remaining = getTiempoRestante(currentSt);
+        
+        const clock = document.getElementById('clock');
+        const penTxt = document.getElementById('penalizacion-txt');
+        
+        if(clock) {
+            clock.textContent = formatTime(remaining);
+            clock.classList.remove('warning','danger');
+            if(remaining <= 60) clock.classList.add('danger');
+            else if(remaining <= 300) clock.classList.add('warning');
+        }
+
+        if(currentSt.penalizacion > 0 && penTxt) {
+            penTxt.classList.remove('hidden');
+            penTxt.textContent = `-${formatTime(currentSt.penalizacion)}`;
+        }
+
+        const currentResueltos = Array.isArray(currentSt.resueltos) ? currentSt.resueltos : [];
+        const pct = Math.round((currentResueltos.length / TOTAL_RETOS) * 100);
+        
+        const progressBar = document.getElementById('progress-bar');
+        const progressTxt = document.getElementById('progress-txt');
+        if(progressBar) progressBar.style.width = pct + '%';
+        if(progressTxt) progressTxt.textContent = currentResueltos.length + '/' + TOTAL_RETOS;
+
+        if(remaining <= 0 || currentResueltos.length >= TOTAL_RETOS) {
+            window.location.href = 'cierre.html';
+        }
+      };
+      
+      tick(); 
+      setInterval(tick, 1000);
+    });
+  </script>
+</body>
+</html>
