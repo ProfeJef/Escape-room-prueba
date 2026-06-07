@@ -43,16 +43,30 @@
     #progress-txt{font-family:var(--font-mono);font-size:.8rem;color:var(--accent);font-weight:700}
 
     main { position:relative; z-index:1; flex:1; display:flex; justify-content:center; padding:1.5rem; }
-    .reto-shell { width:100%; max-width:940px; display:grid; grid-template-columns: 1.2fr .8fr; gap:1rem; }
+    .reto-shell { width:100%; max-width:1000px; display:grid; grid-template-columns: 1.3fr .7fr; gap:1rem; }
     .panel {
       background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg);
       box-shadow:0 0 40px rgba(56,189,248,.05),0 16px 40px rgba(0,0,0,.35);
     }
-    .panel-body{padding:1.25rem 1.25rem 1.35rem}
+    .panel-body{padding:1.5rem}
 
     .eyebrow{font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:.55rem}
     .titulo{font-family:var(--font-mono);font-size:clamp(1.1rem,2.2vw,1.6rem);line-height:1.2;margin-bottom:.9rem}
-    .narrativa{font-size:.95rem;line-height:1.72;color:#9fb0c6;margin-bottom:1rem}
+    
+    /* Contenedor Flex para la imagen y la narrativa */
+    .narrativa-container {
+      display: flex; gap: 1.2rem; margin-bottom: 1.2rem; align-items: stretch;
+    }
+    .narrativa-img {
+      flex-shrink: 0; width: 140px; background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: 14px; display: flex; align-items: center; justify-content: center;
+      overflow: hidden; padding: 10px;
+    }
+    .narrativa-img svg { width: 100%; height: auto; max-height: 120px; }
+    .narrativa-text { flex: 1; }
+    
+    .narrativa{font-size:.95rem;line-height:1.72;color:#9fb0c6;margin-bottom:0}
+    
     .enunciado-box{background:rgba(56,189,248,.05);border:1px solid rgba(56,189,248,.15);border-radius:14px;padding:1rem;margin-bottom:1rem}
     .enunciado{font-size:1rem;color:var(--text);line-height:1.6}
     .tags{display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:1rem}
@@ -101,7 +115,7 @@
     .mini-box .l{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
     .hint-box{background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.18);border-radius:14px;padding:.9rem;color:#f6c56c;font-size:.84rem;line-height:1.6}
 
-    .actions{display:flex;gap:.75rem;margin-top:1rem;flex-wrap:wrap}
+    .actions{display:flex;gap:.75rem;margin-top:1.5rem;flex-wrap:wrap}
     button.btn{
       border:none;border-radius:14px;padding:.9rem 1rem;cursor:pointer;font-weight:700;letter-spacing:.05em;transition:.2s ease
     }
@@ -123,6 +137,9 @@
 
     @media (max-width: 860px){
       .reto-shell{grid-template-columns:1fr}
+      .narrativa-container { flex-direction: column; }
+      .narrativa-img { width: 100%; height: 120px; }
+      .narrativa-img svg { height: 100px; max-width: 100%; }
     }
     @media (max-width: 520px){
       header{padding:.75rem .8rem}.header-title{display:none}.barra-outer{width:56px}
@@ -155,7 +172,17 @@
           <p id="reto-eyebrow" class="eyebrow">Nivel</p>
           <h1 id="reto-titulo" class="titulo">Título del reto</h1>
           <div id="reto-tags" class="tags"></div>
-          <div id="reto-narrativa" class="narrativa"></div>
+          
+          <!-- Contenedor para Imagen y Narrativa -->
+          <div class="narrativa-container">
+            <div id="reto-imagen-container" class="narrativa-img">
+              <!-- La imagen SVG se inyectará aquí -->
+            </div>
+            <div class="narrativa-text">
+              <div id="reto-narrativa" class="narrativa"></div>
+            </div>
+          </div>
+
           <div class="enunciado-box"><div id="reto-enunciado" class="enunciado"></div></div>
           <div id="reto-opciones" class="opciones"></div>
 
@@ -192,11 +219,12 @@
   <footer>Desarrollado por <span>Eduquemos con TIC</span> · Matemáticas 8° · 2026</footer>
 
   <script>
-    // ─── 1. CORRECCIÓN MATEMÁTICA DE LOS RETOS (Feedback y Textos) ───
+    // ─── 1. CORRECCIÓN MATEMÁTICA E INYECCIÓN DE IMÁGENES SVG ───
     const RETOS = [
       {
         id:1, tipo:1, titulo:'El mural que nadie midió', eyebrow:'Nivel 1 · Cuadrado de suma',
         tags:[{label:'Básico',cls:'rtag-green'},{label:'(a+b)²',cls:'rtag-purple'},{label:'Área',cls:'rtag-gold'}],
+        imagen: `<svg viewBox="0 0 100 100" fill="none" stroke="var(--accent)" stroke-width="2"><rect x="20" y="20" width="60" height="60" rx="4" stroke-dasharray="4 4" /><path d="M20 50h60M50 20v60" opacity="0.5"/><text x="50" y="15" font-size="10" fill="var(--text)" stroke="none" text-anchor="middle">3x + 5</text></svg>`,
         narrativa:'El software de infraestructura aprobó el presupuesto para un mural artístico cuyo lado mide <strong>(3x + 5)</strong> metros. Sin embargo, el algoritmo calculó el área usando la expresión <em>9x² + 25</em>, ignorando la zona central. Corrige el cálculo real del área.',
         enunciado:'Desarrolla correctamente el producto notable <strong>(3x + 5)²</strong>.',
         opciones:[
@@ -209,6 +237,7 @@
       {
         id:2, tipo:2, titulo:'El terreno que se recortó', eyebrow:'Nivel 2 · Cuadrado de diferencia',
         tags:[{label:'Fácil',cls:'rtag-green'},{label:'(a-b)²',cls:'rtag-purple'},{label:'Espacial',cls:'rtag-pink'}],
+        imagen: `<svg viewBox="0 0 100 100" fill="none" stroke="var(--pink)" stroke-width="2"><rect x="15" y="15" width="70" height="70" rx="4" opacity="0.3"/><rect x="15" y="15" width="50" height="50" rx="4" fill="rgba(244,114,182,0.1)"/><path d="M65 15v50M15 65h50" stroke-dasharray="4 4" opacity="0.7"/><text x="40" y="80" font-size="10" fill="var(--text)" stroke="none" text-anchor="middle">5x - 4</text></svg>`,
         narrativa:'El sistema redujo las dimensiones de un huerto escolar a <strong>(5x - 4)</strong>. Registró el área como <em>25x² + 16</em>, ignorando el cambio intermedio. Restaura el cálculo correcto.',
         enunciado:'Arrastra el desarrollo correcto para <strong>(5x - 4)²</strong>.',
         opciones:[
@@ -221,6 +250,7 @@
       {
         id:3, tipo:3, titulo:'El contenedor de doble cara', eyebrow:'Nivel 3 · Diferencia de cuadrados',
         tags:[{label:'Medio',cls:'rtag-gold'},{label:'(a+b)(a-b)',cls:'rtag-purple'},{label:'Conjugados',cls:'rtag-pink'}],
+        imagen: `<svg viewBox="0 0 100 100" fill="none" stroke="var(--gold)" stroke-width="2"><path d="M20 30L80 30" /><path d="M20 70L80 70" stroke-dasharray="4 4"/><circle cx="50" cy="50" r="15" fill="rgba(245,158,11,0.1)"/><text x="50" y="25" font-size="10" fill="var(--text)" stroke="none" text-anchor="middle">7x + 6</text><text x="50" y="85" font-size="10" fill="var(--text)" stroke="none" text-anchor="middle">7x - 6</text></svg>`,
         narrativa:'La plataforma expandió <strong>(7x + 6)(7x - 6)</strong> y dejó una expresión con términos lineales que debían anularse. Identifica la simplificación válida.',
         enunciado:'Escribe la palabra <strong>correcto</strong> frente a la única simplificación válida.',
         opciones:[
@@ -233,6 +263,7 @@
       {
         id:4, tipo:2, titulo:'El tanque de agua del colegio', eyebrow:'Nivel 4 · Cubo de binomio',
         tags:[{label:'Medio-alto',cls:'rtag-gold'},{label:'(a+b)³',cls:'rtag-purple'},{label:'Volumen',cls:'rtag-pink'}],
+        imagen: `<svg viewBox="0 0 100 100" fill="none" stroke="var(--accent-2)" stroke-width="2"><path d="M30 30l15-15h30l-15 15H30z" fill="rgba(129,140,248,0.1)"/><path d="M75 15v40l-15 15M30 30v40l15 15h30"/><path d="M45 70v15M30 70h15" opacity="0.5"/><text x="45" y="85" font-size="8" fill="var(--text)" stroke="none" text-anchor="middle">2x + 3</text></svg>`,
         narrativa:'La capacidad de un tanque con arista <strong>(2x + 3)</strong> fue subestimada por el sistema. El cálculo correcto requiere el desarrollo completo del cubo del binomio.',
         enunciado:'Arrastra la opción correcta para <strong>(2x + 3)³</strong>.',
         opciones:[
@@ -245,6 +276,7 @@
       {
         id:5, tipo:5, titulo:'El festival de matemáticas', eyebrow:'Nivel 5 · Factorización compuesta',
         tags:[{label:'Alto',cls:'rtag-pink'},{label:'Factor común',cls:'rtag-purple'},{label:'Dif. cuadrados',cls:'rtag-gold'}],
+        imagen: `<svg viewBox="0 0 100 100" fill="none" stroke="var(--green)" stroke-width="2"><circle cx="35" cy="50" r="20" stroke-dasharray="2 4"/><circle cx="65" cy="50" r="20" stroke-dasharray="2 4"/><path d="M50 30v40" opacity="0.3"/><text x="50" y="85" font-size="10" fill="var(--text)" stroke="none" text-anchor="middle">50x³ - 72x</text></svg>`,
         narrativa:'La expresión <strong>50x³ - 72x</strong> fue catalogada como irreducible. Debes factorizarla completamente para reactivar los fondos del festival.',
         enunciado:'Factoriza completamente la expresión. <br><small style="color:#f6c56c;display:block;margin-top:8px">Escribe sin espacios. Formato válido: 2x(5x+6)(5x-6)</small>',
         respuestaExacta:['2x(5x+6)(5x-6)','2x(5x-6)(5x+6)'],
@@ -253,6 +285,7 @@
       {
         id:6, tipo:6, titulo:'La fórmula justa del sistema', eyebrow:'Nivel 6 · Misión final · Experto',
         tags:[{label:'Experto',cls:'rtag-pink'},{label:'Misión final',cls:'rtag-gold'},{label:'Código',cls:'rtag-purple'}],
+        imagen: `<svg viewBox="0 0 100 100" fill="none" stroke="var(--red)" stroke-width="2"><rect x="25" y="25" width="50" height="50" rx="8"/><path d="M35 50h30M50 35v30" /><circle cx="50" cy="50" r="5" fill="var(--red)"/><text x="50" y="15" font-size="10" fill="var(--text)" stroke="none" text-anchor="middle">Desbloqueo</text></svg>`,
         narrativa:'El sistema redujo erróneamente la ecuación <strong>(½x + 4)² - 16</strong> a <em>¼x²</em>. Encuentra la simplificación correcta para obtener el código final.',
         enunciado:'Desarrolla y simplifica al máximo la expresión para hallar el código de desbloqueo final.',
         opciones:[
@@ -326,21 +359,20 @@
       }
     }
 
-    // ─── 3. NUEVA LÓGICA DE PENALIZACIÓN (5 min / 10 min) ───
     function registrarIntentoFallido(retoId){
       const st = loadState();
       st.intentosPorReto = st.intentosPorReto || {};
-      st.totalErrores = (st.totalErrores || 0) + 1; // Contador global de todos los errores para el cierre
+      st.totalErrores = (st.totalErrores || 0) + 1; 
       st.intentosPorReto[retoId] = (st.intentosPorReto[retoId] || 0) + 1;
       
       let intentosActuales = st.intentosPorReto[retoId];
       let penSeg = 0;
       
       if(intentosActuales >= MAX_INTENTOS){
-        penSeg = 10 * 60; // 10 minutos al 3er error
-        st.intentosPorReto[retoId] = 0; // Reinicia el contador de ese reto
+        penSeg = 10 * 60;
+        st.intentosPorReto[retoId] = 0; 
       } else {
-        penSeg = 5 * 60; // 5 minutos al 1er y 2do error
+        penSeg = 5 * 60;
       }
       
       st.penalizacion = (st.penalizacion || 0) + penSeg;
@@ -364,7 +396,6 @@
       $('fb-text').innerHTML = texto;
     }
 
-    // ─── 4. RENDER Y LÓGICA DE INTERACCIÓN ───
     function renderReto(){
       const id = parseInt(getParam('id') || '1', 10);
       const reto = RETOS.find(r => r.id === id);
@@ -378,6 +409,9 @@
       $('reto-enunciado').innerHTML = reto.enunciado;
       $('reto-tags').innerHTML = reto.tags.map(t => `<span class="rtag ${t.cls}">${t.label}</span>`).join('');
       $('hint-box').innerHTML = construirPista(reto);
+      
+      // Inyectar imagen
+      $('reto-imagen-container').innerHTML = reto.imagen;
 
       const opcionesEl = $('reto-opciones');
       const btnValidar = $('btn-validar');
@@ -529,12 +563,11 @@
             btnSiguiente.onclick = () => window.location.href = 'mapa.html';
           }
         } else {
-          // --- AQUÍ ESTÁN LAS ADVERTENCIAS DE TIEMPO AJUSTADAS ---
           const r = registrarIntentoFallido(reto.id);
           let penMin = r.penSeg / 60;
           let aviso = '';
           
-          if(r.penSeg === 600) { // 10 minutos (3er error)
+          if(r.penSeg === 600) {
               aviso = `<div style="margin-top:10px; color:var(--red); font-weight:bold;">¡ERROR CRÍTICO! 3 intentos fallidos en este reto. Penalización mayor: -10:00 minutos.</div>`;
           } else {
               aviso = `<div style="margin-top:10px; color:var(--red); font-weight:bold;">¡ALERTA! Has cometido un error. Penalización: -5:00 minutos.</div>`;
